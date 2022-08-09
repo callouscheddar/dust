@@ -1,3 +1,2 @@
 include("shared.lua")
-
-print("cl_init.lua loaded")
+include("nametags/cl_nametags.lua")
