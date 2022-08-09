@@ -5,15 +5,18 @@ A garry's mod gamemode. The exact project goal isn't established other than lear
 ## Functions:
     PascelCase
     ex. DoThisFunction()
+## Tables:
+    snake_case
+    citizen_outfits = {}
 ## Variables:
     camelCase
     ex. variableNumberOne
-## Hook Identifies
-    filename_Description
+## Hook Identifiers
+    filename_HookName
     (full lowercase filename, PascelCase Description)
     ex. 
     hook.Add("PlayerInitialSpawn", "init_PrintHello", function()
-    
+        -- do something
     end)
 ## Comments:
     Single line use -- not // (-- Looks cleaner)
