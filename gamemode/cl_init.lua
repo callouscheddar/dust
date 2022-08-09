@@ -1,2 +1,3 @@
 include("shared.lua")
-include("nametags/cl_nametags.lua")
+include("client/cl_nametags.lua")
+include("client/cl_hud.lua")

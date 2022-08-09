@@ -1,5 +1,5 @@
 # Pickle
-A garry's mod gamemode. The exact project goal isn't established other than learn GLua (and lua itself) to create  an interesting gamemode.
+A garry's mod gamemode. The exact project goal isn't established other than learn GLua (and lua itself) and create an interesting gamemode.
 
 ## Naming & Project Conventions:
 ## Functions:
@@ -12,7 +12,7 @@ A garry's mod gamemode. The exact project goal isn't established other than lear
     camelCase
     ex. variableNumberOne
 ## Hook Identifiers
-    filename_HookName
+    filename_HookName or  filename_Description
     (full lowercase filename, PascelCase Description)
     ex. 
     hook.Add("PlayerInitialSpawn", "init_PrintHello", function()

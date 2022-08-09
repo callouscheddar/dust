@@ -1,6 +1,7 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
-AddCSLuaFile("nametags/cl_nametags.lua")
+AddCSLuaFile("client/cl_nametags.lua")
+AddCSLuaFile("client/cl_hud.lua")
 
 include("shared.lua")
 
