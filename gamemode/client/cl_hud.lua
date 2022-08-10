@@ -1,16 +1,40 @@
-
 -- HUD elements to hide
 local hide = {
-    CHudHealth = true,
-    CHudBattery = true,
-    CHudZoom = true,
-    CHudWeaponSelection = false,
+	CHudHealth = true,
+	CHudBattery = true,
+	CHudZoom = true,
+	CHudWeaponSelection = false,
 }
 
 -- Hides HL2 HUD elements
 hook.Add("HUDShouldDraw", "HideHUD", function(name)
-    if hide[name] then return false end
+	if hide[name] then return false end
 end)
+
+-- check if play is stamina, control stamina
+hook.Add("Think", "cl_hud_IsSprinting", function()
+	local ply = LocalPlayer()
+	
+	if ply:IsSprinting() and player_values.stamina > 0 then
+		player_values.stamina = player_values.stamina - player_values.sprintRate
+		player_values.energyRate = 5
+	elseif player_values.stamina < 100 then
+		player_values.stamina = player_values.stamina + player_values.sprintRate
+		player_values.energyRate = 1
+	end
+
+	if player_values.stamina < 1 then
+		player_values.hasStamina = false
+	end
+	if player_values.stamina > 5 then
+		player_values.hasStamina = true
+	end
+end)
+
+timer.Create("hungerTimer", 2, 0, function()
+	player_values.hunger = player_values.hunger - (1 * player_values.energyRate)
+end)
+
 
 -- override paint function, clear base functionality
 function GM:HUDPaint()
@@ -18,17 +42,52 @@ end
 
 -- health bar
 hook.Add("HUDPaint", "cl_hud_HealthBar", function()
-    local ply = LocalPlayer()
+	local ply = LocalPlayer()
+
+    if !ply:Alive() then return end
+
     local hbCol = Color(255, 0, 0, 250)
     local hbBg = Color(0, 0, 0, 210)
     local plyH = math.Clamp(ply:Health(), 0, ply:GetMaxHealth())
     local scrw, scrh = ScrW(), ScrH()
-    if !ply:Alive() then return end
 
     surface.SetDrawColor(hbBg)
     surface.DrawRect(scrw * .0275, scrh * .955, 100 * 3, 10)
     surface.SetDrawColor(hbCol)
     surface.DrawRect(scrw * .025, scrh * .95, plyH * 3, 10)
+end)
+
+-- hunger bar
+hook.Add("HUDPaint", "cl_hud_HungerBar", function()
+	local ply = LocalPlayer()
+
+    if !ply:Alive() then return end
+
+    local hbCol = Color(0, 255, 0, 250)
+    local hbBg = Color(0, 0, 0, 210)
+    local scrw, scrh = ScrW(), ScrH()
+	local hunger = math.Clamp(player_values.hunger, 0, 200)
+
+    surface.SetDrawColor(hbBg)
+    surface.DrawRect(scrw * .0275, scrh * .935, 50 * 4, 10)
+    surface.SetDrawColor(hbCol)
+    surface.DrawRect(scrw * .025, scrh * .930, hunger, 10)
+end)
+
+hook.Add("HUDPaint", "cl_hud_StaminaBar", function()
+	local ply = LocalPlayer()
+
+    if !ply:Alive() then return end
+	
+    local ply = LocalPlayer()
+    local hbCol = Color(0, 0, 255, 250)
+    local hbBg = Color(0, 0, 0, 210)
+    local scrw, scrh = ScrW(), ScrH()
+
+    surface.SetDrawColor(hbBg)
+    surface.DrawRect(scrw * 0.795, scrh * .955, 100 * 3, 10)
+    surface.SetDrawColor(hbCol)
+    surface.DrawRect(scrw * .7915, scrh * .950, player_values.stamina * 3, 10)
 end)
 
 /*
