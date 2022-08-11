@@ -16,11 +16,10 @@ citizen_models[8] = "models/player/Group01/male_08.mdl"
 citizen_models[9] = "models/player/Group01/male_09.mdl"
 
 
-
 local Player = FindMetaTable("Player")
 
 Player.values = {}
-Player.values["hunger"]         = 1
+Player.values["hunger"]         = 200
 Player.values["energyRate"]     = 1
 Player.values["stamina"]        = 100
 Player.values["sprintRate"]     = 0.065
@@ -87,15 +86,29 @@ function Player:GetSkills()
     return self.values.skills
 end
 
-function Player:SetSkills(skill, amount)
+function Player:GetSkillsPoints()
+    -- turn assoc array into a indexed array
     local skills = self:GetSkills()
-    local newAmount = skills[skill] + amount
-    if newAmount < 0 then
-        print("Cannot set skills less then 0") 
+    local newSkills = {}
+    for index, value in pairs(skills) do
+        table.insert(newSkills, value)
     end
-    skills[skill] = newAmount
+    return newSkills
 end
 
+function Player:SetSkills(skill, amount)
+    skill = string.lower(skill)
+    local skills = self:GetSkills()
+    local totalPoints = self:GetSkillPoints()
+    local newAmount = skills[skill] + amount
+    if newAmount < 0 or newAmount > 10 then
+        print("Cannot set skills less then 0, skills cannot go past 10") 
+        return false
+    end
+    totalPoints = totalPoints + amount
+    skills[skill] = newAmount
+    return true
+end
 
 player_races = {}
 player_races[1] = {

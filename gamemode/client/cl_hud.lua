@@ -11,8 +11,10 @@ hook.Add("HUDShouldDraw", "HideHUD", function(name)
 	if hide[name] then return false end
 end)
 
+
 timer.Create("hungerTimer", 2, 0, function()
-	player_values.hunger = player_values.hunger - (1 * player_values.energyRate)
+	local ply = LocalPlayer()
+	ply.values.hunger = ply.values.hunger - (1 * ply.values.energyRate)
 end)
 
 
@@ -46,7 +48,7 @@ hook.Add("HUDPaint", "cl_hud_HungerBar", function()
     local hbCol = Color(0, 255, 0, 250)
     local hbBg = Color(0, 0, 0, 210)
     local scrw, scrh = ScrW(), ScrH()
-	local hunger = math.Clamp(player_values.hunger, 0, 200)
+	local hunger = math.Clamp(ply.values.hunger, 0, 200)
 
     surface.SetDrawColor(hbBg)
     surface.DrawRect(scrw * .0275, scrh * .935, 50 * 4, 10)
@@ -65,9 +67,9 @@ hook.Add("HUDPaint", "cl_hud_StaminaBar", function()
     local scrw, scrh = ScrW(), ScrH()
 
     surface.SetDrawColor(hbBg)
-    surface.DrawRect(scrw * 0.795, scrh * .955, 100 * 3, 10)
+    surface.DrawRect(scrw * 0.85, scrh * .955, 100 * 2, 10)
     surface.SetDrawColor(hbCol)
-    surface.DrawRect(scrw * .7915, scrh * .950, player_values.stamina * 3, 10)
+    surface.DrawRect(scrw * .8475, scrh * .950, ply.values.stamina * 2, 10)
 end)
 
 /*

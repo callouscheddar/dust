@@ -6,6 +6,7 @@ function INPUT_LABEL:Init()
     self:Dock(TOP)
     self:DockMargin(10, 5, 10, 0)
     self:SetTextColor(Color(0, 0, 0))
+    self:SetFont("CustomFont")
 end
 
 local COMBO_BOX = {}
@@ -15,8 +16,18 @@ function COMBO_BOX:Init()
     self:DockMargin(10, 0, 10, 0)
 end
 
+-- local SKILL_WANG = {}
+
+-- function SKILL_WANG:Init()
+--     self:Dock(LEFT)
+--     self:HideWang()
+--     self:SetMinMax(0, 10)
+--     self:SetDecimals(0)
+-- end
+
 vgui.Register("InputLabel", INPUT_LABEL, "DLabel")
 vgui.Register("ComboBox", COMBO_BOX, "DComboBox")
+-- vgui.Register("SkillWang", SKILL_WANG, "DNumberWang")
 
 
 concommand.Add("open_menu", function()
@@ -106,35 +117,90 @@ concommand.Add("open_menu", function()
     traitDesc:DockMargin(10, 5, 10, 0)
     
     // SKILL VGUI
-    local skillPanels = {}
-    local skillsVGUI = {}
-    local skillsLabels = {}
     local skillHeader = vgui.Create("InputLabel", inputPanel)
+    local skillPanels = {}
+    local skillsAmount = {}
+    local skillsLabels = {}
+    local skillsAdd = {}
+    local skillsSub = {}
     
     skillHeader:SetText("Assign Your Skill Points: ")
     
     for index, skill in ipairs(player_skills) do
+        -- panel to hold name, current points, and buttons
         skillPanels[index] = vgui.Create("DPanel", inputPanel)
         skillPanels[index]:Dock(TOP)
         skillPanels[index]:DockMargin(10, 0, 10, 0)
+
+        -- skills name labels
         skillsLabels[index] = vgui.Create("DLabel", skillPanels[index])
         skillsLabels[index]:Dock(LEFT)
         skillsLabels[index]:SetTextColor(color_black)
         skillsLabels[index]:SetText(skill.name)
-        skillsVGUI[index] = vgui.Create("DNumberWang", skillPanels[index])
-        skillsVGUI[index]:Dock(LEFT)
+
+        -- current points in said skill
+        skillsAmount[index] = vgui.Create("DLabel", skillPanels[index])
+        skillsAmount[index]:Dock(LEFT)
+        skillsAmount[index]:SetTextColor(color_black)
+        skillsAmount[index]:SetText("0")
+        skillsAmount[index].skill = skill.name
+
+        -- add points vgui
+        skillsAdd[index] = vgui.Create("DButton", skillPanels[index])
+        skillsAdd[index]:Dock(LEFT)
+        skillsAdd[index]:SetText("+")
+        skillsAdd[index]:SetWide(24)
+        skillsAdd[index].skill = skill.name
+
+        -- subtract points vgui
+        skillsSub[index] = vgui.Create("DButton", skillPanels[index])
+        skillsSub[index]:Dock(LEFT)
+        skillsSub[index]:SetText("-")
+        skillsSub[index]:SetWide(24)
+        skillsSub[index].skill = skill.name
+    end
+
+    -- updates our skillsAmount vgui w/ proper skill amount
+    function UpdateSkillsAmount() 
+        local skills = ply:GetSkills()
+        for index, value in ipairs(skillsAmount) do
+            local skillName = string.lower(skillsAmount[index].skill)
+            local skillAmount = ply.values.skills[skillName]
+            print(skillAmount)
+            skillsAmount[index]:SetText(skillAmount)
+        end
+    end
+
+    function UpdateTotalSkillPoints()
+
+    end
+
+    -- add functionality to doclick for plus skill btn's
+    for index, value in ipairs(skillsAdd) do
+        value.DoClick = function()
+            local result = ply:SetSkills(value.skill, 1)
+            UpdateSkillsAmount()
+        end
+    end
+
+    for index, value in ipairs(skillsSub) do
+        value.DoClick = function()
+            local result = ply:SetSkills(value.skill, -1)
+            print(result)
+            UpdateSkillsAmount()
+        end
     end
 
     -- check to see change on skillsvgui
-    -- for _, value in ipairs(skillsVGUI) do
-    --     print(value)
-    --     function value:OnValueChanged(val)
-    --         local curPoints = ply:GetSkillPoints()
-    --         if curPoints < 0 then return end
-    --         ply:SetSkillPoints(val)
+    -- for index, value in ipairs(skillsVGUI) do
+    --     function value:OnValueChange(val)
+    --         print(val)
     --     end
+    --     -- local curPoints = ply:GetSkillPoints()
+    --     -- if curPoints < 0 then return end
+    --     -- ply:SetSkillPoints(val)
     -- end
-    
+
     local skillPoints = vgui.Create("DLabel", inputPanel)
 
     skillPoints:Dock(TOP)
@@ -164,6 +230,8 @@ concommand.Add("open_menu", function()
     function model:LayoutEntity(ent)
         ent:SetAngles(Angle(0, 50 + (SysTime() * 50), 0))
     end
+
+    UpdateSkillsAmount()
 end)
 
 /* gmod wiki reference
