@@ -11,26 +11,6 @@ hook.Add("HUDShouldDraw", "HideHUD", function(name)
 	if hide[name] then return false end
 end)
 
--- check if play is stamina, control stamina
-hook.Add("Think", "cl_hud_IsSprinting", function()
-	local ply = LocalPlayer()
-	
-	if ply:IsSprinting() and player_values.stamina > 0 then
-		player_values.stamina = player_values.stamina - player_values.sprintRate
-		player_values.energyRate = 5
-	elseif player_values.stamina < 100 then
-		player_values.stamina = player_values.stamina + player_values.sprintRate
-		player_values.energyRate = 1
-	end
-
-	if player_values.stamina < 1 then
-		player_values.hasStamina = false
-	end
-	if player_values.stamina > 5 then
-		player_values.hasStamina = true
-	end
-end)
-
 timer.Create("hungerTimer", 2, 0, function()
 	player_values.hunger = player_values.hunger - (1 * player_values.energyRate)
 end)

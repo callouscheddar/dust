@@ -1,6 +1,4 @@
 local t = ""
-print("test")
-
 
 local INPUT_LABEL = {}
 
@@ -25,6 +23,8 @@ concommand.Add("open_menu", function()
     local scrw, scrh = ScrW(), ScrH()
     local ply = LocalPlayer()
 
+    local color_black = Color(0, 0, 0)
+
     local inpName, inpRace, inpSkill, inpTrat
 
     local menu = vgui.Create("DFrame")
@@ -48,8 +48,8 @@ concommand.Add("open_menu", function()
     local descriptionPanel = vgui.Create("DPanel", inputPanel)
     descriptionPanel:SetWide(inputPanel:GetWide() / 2)
     descriptionPanel:Dock(RIGHT)
-
     
+    // PLAYER NAME VGUI
     local nameLabel = vgui.Create("InputLabel", inputPanel)
     nameLabel:SetText("Write Your Name: ")
     
@@ -62,43 +62,91 @@ concommand.Add("open_menu", function()
         print(self:GetValue())
     end
     
+    // RACE VGUI
     local raceLabel = vgui.Create("InputLabel", inputPanel)
+    local raceCombo = vgui.Create("ComboBox", inputPanel)
+    local raceDesc = vgui.Create("InputLabel", inputPanel)
+    
     raceLabel:SetText("Select your race: ")
     
-    local raceCombo = vgui.Create("ComboBox", inputPanel)
     raceCombo:SetValue("Pick a Race")
     for _, value in ipairs(player_races) do
         raceCombo:AddChoice(value.name)
     end
     
-    local raceDesc = vgui.Create("InputLabel", inputPanel)
-    raceDesc:SetText("")
-    
     function raceCombo:OnSelect(num, val, data)
-        print("Changed", IsValid(raceDesc))
         if IsValid(raceDesc) then
-            raceDesc:SetText("Test")
+            raceDesc:SetText("Description: ".. player_races[num].description)
+            raceDesc:SetAutoStretchVertical(true)
         end
     end
     
-    local skillLabel = vgui.Create("InputLabel", inputPanel)
-    skillLabel:SetText("Select your Skill: ")
+    raceDesc:SetText("You have no selected a skill yet.")
     
-    local skillCombo = vgui.Create("ComboBox", inputPanel)
-    skillCombo:SetValue("Pick a Skill")
-    for _, value in ipairs(player_skills) do
-        skillCombo:AddChoice(value.name)
-    end
-
+    // TRAIT VGUI
     local traitLabel = vgui.Create("InputLabel", inputPanel)
+    local traitCombo = vgui.Create("ComboBox", inputPanel)
+    local traitDesc = vgui.Create("DLabel", inputPanel)
+    
     traitLabel:SetText("Select your Trait: ")
     
-    local traitCombo = vgui.Create("ComboBox", inputPanel)
     traitCombo:SetValue("Pick a Trait")
     for _, value in ipairs(player_traits) do
         traitCombo:AddChoice(value.name)
     end
+    function traitCombo:OnSelect(num, val, data)
+        if IsValid(traitDesc) then
+            traitDesc:SetText("Description: " .. player_traits[num].description)
+        end
+    end
+
+    traitDesc:Dock(TOP)
+    traitDesc:SetTextColor(color_black)
+    traitDesc:SetText("You haven't selected a trait yet.")
+    traitDesc:DockMargin(10, 5, 10, 0)
     
+    // SKILL VGUI
+    local skillPanels = {}
+    local skillsVGUI = {}
+    local skillsLabels = {}
+    local skillHeader = vgui.Create("InputLabel", inputPanel)
+    
+    skillHeader:SetText("Assign Your Skill Points: ")
+    
+    for index, skill in ipairs(player_skills) do
+        skillPanels[index] = vgui.Create("DPanel", inputPanel)
+        skillPanels[index]:Dock(TOP)
+        skillPanels[index]:DockMargin(10, 0, 10, 0)
+        skillsLabels[index] = vgui.Create("DLabel", skillPanels[index])
+        skillsLabels[index]:Dock(LEFT)
+        skillsLabels[index]:SetTextColor(color_black)
+        skillsLabels[index]:SetText(skill.name)
+        skillsVGUI[index] = vgui.Create("DNumberWang", skillPanels[index])
+        skillsVGUI[index]:Dock(LEFT)
+    end
+
+    -- check to see change on skillsvgui
+    -- for _, value in ipairs(skillsVGUI) do
+    --     print(value)
+    --     function value:OnValueChanged(val)
+    --         local curPoints = ply:GetSkillPoints()
+    --         if curPoints < 0 then return end
+    --         ply:SetSkillPoints(val)
+    --     end
+    -- end
+    
+    local skillPoints = vgui.Create("DLabel", inputPanel)
+
+    skillPoints:Dock(TOP)
+    skillPoints:DockMargin(10, 5, 10, 0)
+    skillPoints:SetTextColor(color_black)
+    skillPoints:SetText("Available Points: " .. player_skill_points)
+
+    -- local skillWang = vgui.Create("ComboBox", inputPanel)
+    -- skillCombo:SetValue("Pick a Skill")
+    -- for _, value in ipairs(player_skills) do
+    --     skillCombo:AddChoice(value.name)
+    -- end
 
     /*
         MODEL PANEL

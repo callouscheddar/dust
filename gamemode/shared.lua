@@ -15,14 +15,87 @@ citizen_models[7] = "models/player/Group01/male_07.mdl"
 citizen_models[8] = "models/player/Group01/male_08.mdl"
 citizen_models[9] = "models/player/Group01/male_09.mdl"
 
-player_values = {}
-player_values["hunger"]         = 500
-player_values["energyRate"]     = 1
-player_values["stamina"]        = 100
-player_values["sprintRate"]     = 0.065
-player_values["speedWalk"]      = 125
-player_values["speedSprint"]    = 225
-player_values["hasStamina"]     = true
+
+
+local Player = FindMetaTable("Player")
+
+Player.values = {}
+Player.values["hunger"]         = 1
+Player.values["energyRate"]     = 1
+Player.values["stamina"]        = 100
+Player.values["sprintRate"]     = 0.065
+Player.values["speedWalk"]      = 125
+Player.values["speedSprint"]    = 225
+Player.values["hasStamina"]     = true
+Player.values["race"]           = "" -- default human
+Player.values["skillPoints"]    = 10
+Player.values["skills"]         = {
+    strength        = 0,
+    intelligence    = 0,
+    agility         = 0,
+}
+Player.values["trait"]          = ""
+
+/*
+    Getters & Setters for player data
+*/
+
+-- HUNGER
+function Player:GetHunger()
+    return self.values.hunger
+end
+
+function Player:SetHunger(hunger)
+    self.values.hunger = hunger
+end
+
+--  STAMINA
+function Player:GetStamina()
+    return self.values.stamina
+end
+
+function Player:SetStamina(stamina)
+    self.values.stamina = stamina
+end
+
+-- SPRINT SPEED
+function Player:GetSpeedSprint()
+    return self.values.speedSprint
+end
+
+function Player:SetSpeedSprint(sprintSpeed)
+    self.values.speedSprint = sprintSpeed
+end
+
+-- SKILL POINTS
+function Player:GetSkillPoints()
+    return self.values.skillPoints
+end
+
+function Player:SetSkillPoints(amount) 
+    local points = GetSkillPoints()
+    local newPoints = self.values.skillPoints + amount
+    if points > 10 or newPoints < 0 then 
+        print("Cannot have more than 10 points, or less than 0.") 
+        return 
+    end
+    self.values.skillPoints = self.values.skillPoints + amount
+end
+
+-- SKILLS
+function Player:GetSkills()
+    return self.values.skills
+end
+
+function Player:SetSkills(skill, amount)
+    local skills = self:GetSkills()
+    local newAmount = skills[skill] + amount
+    if newAmount < 0 then
+        print("Cannot set skills less then 0") 
+    end
+    skills[skill] = newAmount
+end
+
 
 player_races = {}
 player_races[1] = {
@@ -35,7 +108,7 @@ player_races[2] = {
 }
 player_races[3] = {
     name = "Borg",
-    description = "robot n shit"
+    description = "robot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shitrobot n shit"
 }
 
 player_skills = {}
@@ -51,6 +124,7 @@ player_skills[3] = {
     name = "Agility",
     description = "farts"
 }
+player_skill_points = 10
 
 player_traits = {}
 player_traits[1] = {
