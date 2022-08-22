@@ -1,6 +1,8 @@
 # Pickle
 A garry's mod gamemode. The exact project goal isn't established other than to learn GLua (and lua itself) and create an interesting gamemode. The name of the repo is only a project name, and won't be the final gamemode name.
 
+Project Started 8/9/2022
+
 ## Project Ideas & Goals
 The goal is to create a roleplay gamemode (yes, as if there is not enough already) where the setting/atmosphere for the gamemode will be post-apocalyptic.
 
