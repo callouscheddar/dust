@@ -1,4 +1,4 @@
-"pickle"
+"dust"
 {
 	"title"		"Pickle Gamemode"
 	"base"		""
