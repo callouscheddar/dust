@@ -1,5 +1,8 @@
 "dust"
 {
-	"title"		"Pickle Gamemode"
-	"base"		""
+	"base"		"base"
+	"title"		"Quite literally nothing."
+	"category"	"other"
+	"maps"		"gm_construct"
+	"menusystem"	"1"
 }
